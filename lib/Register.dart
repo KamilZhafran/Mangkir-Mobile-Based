@@ -1,10 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:tubes_app/Register.dart';
+import 'package:tubes_app/Login.dart';
 import 'package:tubes_app/main.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class RegisterPage extends StatelessWidget {
+  const RegisterPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class LoginPage extends StatelessWidget {
                 margin: const EdgeInsets.only(top: 50, bottom: 50),
                 decoration: BoxDecoration(
                   color: Colors.grey,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: ListView(
                   padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 25),
@@ -41,13 +41,32 @@ class LoginPage extends StatelessWidget {
                     const Align( // align the text into Center
                       alignment: Alignment.center,
                       child: Text(
-                        "Login",
+                        "Create account",
                         style: TextStyle(
                           color: Colors.black,
                           fontFamily: 'Cardo',
                           fontSize: 30,
                         ),
                       ),
+                    ),
+                    const SizedBox(height: 15), // vertical spacing
+                    TextFormField( // form input for Name
+                      style: const TextStyle(color: Colors.black),
+                      decoration: const InputDecoration(
+                        labelText: 'Name',
+                        hintText: 'Input your Name here...',
+                        labelStyle: TextStyle(color: Colors.black),
+                        enabledBorder: UnderlineInputBorder(
+                          // set the underline border into black
+                          borderSide: BorderSide(color: Colors.black)
+                        )
+                      ),
+                      onSaved: (String? value) {
+                        // Nanti buat ambil value yang diinput
+                      },
+                      validator: (String? value) {
+                        // buat validasi input
+                      },
                     ),
                     const SizedBox(height: 15), // vertical spacing
                     TextFormField( // form input for email
@@ -92,7 +111,7 @@ class LoginPage extends StatelessWidget {
                       margin: const EdgeInsets.only(top: 50, right: 50, left: 50),
                       child: ElevatedButton(
                         onPressed: () {
-                          // Handle login button press
+                          // Handle sign up button press
                           // dipindahin ke home screen
                           Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
                         },
@@ -104,7 +123,7 @@ class LoginPage extends StatelessWidget {
                           backgroundColor: Colors.amber,
                         ),
                         child: const Text(
-                          "Login",
+                          "Sign Up",
                           style: TextStyle(fontSize: 15, fontFamily: 'Cardo', color: Colors.black),
                         ),
                       ),
@@ -116,12 +135,12 @@ class LoginPage extends StatelessWidget {
                       alignment: Alignment.center,
                       child: RichText(
                         text: TextSpan(
-                          text: "Haven't got any account yet? ",
+                          text: "Already have an account? ",
                           style: const TextStyle(color: Colors.black),
                           children: [
                             // make the second clause clickable
                             TextSpan(
-                              text: "Register Here!",
+                              text: "Login here",
                               style: TextStyle(
                                 color: Colors.blue.shade900,
                                 decoration: TextDecoration.underline),
@@ -131,7 +150,7 @@ class LoginPage extends StatelessWidget {
                                     context,
                                     // temporary move to home screen
                                     // it should be move to register
-                                    MaterialPageRoute(builder: (context) => const RegisterPage()),
+                                    MaterialPageRoute(builder: (context) => const LoginPage()),
                                   );
                                 },
                             ),
