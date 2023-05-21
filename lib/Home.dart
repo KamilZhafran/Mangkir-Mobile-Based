@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tubes_app/Login.dart';
+import 'package:tubes_app/Recipe.dart';
 
 void main() {
   runApp(const Home());
@@ -29,62 +30,119 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        CarouselSlider(
-          options: CarouselOptions(height: 200.0),
-          items: [1, 2, 3, 4, 5].map((i) {
-            return Builder(
-              builder: (BuildContext context) {
-                return Container(
-                  width: MediaQuery.of(context).size.width,
-                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                  decoration: BoxDecoration(color: Colors.amber),
-                  child: Center(
-                    child: Text(
-                      '$i',
-                      style: const TextStyle(fontSize: 16.0),
-                    ),
-                  ),
-                );
-              },
-            );
-          }).toList(),
-        ),
-        Center(
-          child: Text(
-            'Others for You!',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 30,
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 60,
+        backgroundColor: Colors.white,
+        elevation: 0,
+        flexibleSpace: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: SizedBox(
+                width: 250,
+                child: TextField(
+                  maxLines: 1,
+                  textAlignVertical: TextAlignVertical.bottom,
+                  decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: BorderSide.none,
+                      ),
+                      filled: true,
+                      hintStyle: TextStyle(color: Colors.grey),
+                      hintText: "Cari Resep..."),
+                ),
+              ),
             ),
-          ),
+            Padding(
+              padding: EdgeInsets.all(10),
+              child: CircleAvatar(
+                child: Icon(Icons.person),
+              ),
+            )
+          ],
         ),
-        Expanded(
-          child: GridView.count(
-            crossAxisCount: 3,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            padding: const EdgeInsets.all(20),
-            children: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) {
-              return Builder(builder: (BuildContext context) {
-                return Container(
-                  width: MediaQuery.of(context).size.width,
-                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                  decoration: BoxDecoration(color: Colors.teal),
-                  child: Center(
-                    child: Text(
-                      '$i',
-                      style: const TextStyle(fontSize: 16.0),
+      ),
+      body: Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          CarouselSlider(
+            options: CarouselOptions(height: 200.0),
+            items: [1, 2, 3, 4, 5].map((i) {
+              return Builder(
+                builder: (BuildContext context) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Recipe()),
+                      );
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                      decoration: BoxDecoration(color: Colors.amber),
+                      child: Center(
+                        child: Text(
+                          '$i',
+                          style: const TextStyle(fontSize: 16.0),
+                        ),
+                      ),
                     ),
-                  ),
-                );
-              });
+                  );
+                },
+              );
             }).toList(),
           ),
-        ),
-      ],
+          Padding(
+            padding: EdgeInsets.only(top: 15),
+            child: Text(
+              'Others for You!',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 30,
+              ),
+            ),
+          ),
+          Expanded(
+            child: GridView.count(
+              crossAxisCount: 3,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
+              padding: const EdgeInsets.all(20),
+              children:
+                  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map((i) {
+                return Builder(builder: (BuildContext context) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Recipe()),
+                      );
+                    },
+                    child: Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                      decoration: BoxDecoration(color: Colors.teal),
+                      child: Center(
+                        child: Text(
+                          '$i',
+                          style: const TextStyle(fontSize: 16.0),
+                        ),
+                      ),
+                    ),
+                  );
+                });
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -36,9 +36,9 @@ class _BottomNav extends State<BottomNav> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home'),
-      ),
+      // appBar: AppBar(
+      //   title: const Text('Home'),
+      // ),
       body: SafeArea(
         child: PageView(
           controller: pc,
@@ -59,6 +59,10 @@ class _BottomNav extends State<BottomNav> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        elevation: 0,
+        backgroundColor: const Color(0x7d7d7d7d),
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
         currentIndex: selected,
         onTap: (value) {
           setState(() {
@@ -70,15 +74,24 @@ class _BottomNav extends State<BottomNav> {
         },
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: SvgPicture.asset('assets/images/ic_round-home.svg'),
+            icon: Icon(
+              Icons.home,
+              color: Colors.white,
+            ),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: SvgPicture.asset('assets/images/ic_cloud-upload.svg'),
+            icon: Icon(
+              Icons.cloud_upload,
+              color: Colors.white,
+            ),
             label: 'Upload',
           ),
           BottomNavigationBarItem(
-            icon: SvgPicture.asset('assets/images/ic_cards-heart.svg'),
+            icon: Icon(
+              Icons.favorite,
+              color: Colors.white,
+            ),
             label: 'Favorite',
           ),
         ],
