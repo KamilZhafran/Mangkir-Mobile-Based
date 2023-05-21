@@ -16,12 +16,38 @@ class Recipe extends StatefulWidget {
 class _RecipeState extends State<Recipe> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Recipe'),
-      ),
-      body: Center(
-        child: Text('Recipe'),
+    return MaterialApp(
+      home: DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          appBar: AppBar(
+            
+            bottom: TabBar(
+              tabs: [
+                Tab(text: 'FIRST'),
+                Tab(text: 'SECOND',),
+                Tab(text: 'THIRD'),
+              ],
+            ),
+            title:
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: AspectRatio(
+                  aspectRatio: 16/9,
+                  child: Container(
+                    color: Colors.grey,
+                  )
+                )
+              ),
+          ),
+          body: TabBarView(
+            children: [
+             Text('1'),
+             Text('2'),
+             Text('3')
+            ],
+          ),
+        ),
       ),
     );
   }
