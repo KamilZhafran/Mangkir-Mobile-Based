@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tubes_app/Home.dart';
 import 'package:tubes_app/Login.dart';
+import 'package:tubes_app/Upload.dart';
 
 import 'Home.dart';
 
@@ -49,9 +50,7 @@ class _BottomNav extends State<BottomNav> {
           },
           children: [
             HomePage(),
-            Container(
-              child: Text('Upload'),
-            ),
+            Upload(),
             Container(
               child: Text('Favorite'),
             ),

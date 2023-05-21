@@ -61,10 +61,18 @@ class _HomePageState extends State<HomePage> {
             ),
             Padding(
               padding: EdgeInsets.all(10),
-              child: CircleAvatar(
-                child: Icon(Icons.person),
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => LoginPage()),
+                  );
+                },
+                child: CircleAvatar(
+                  child: Icon(Icons.person),
+                ),
               ),
-            )
+            ),
           ],
         ),
       ),
