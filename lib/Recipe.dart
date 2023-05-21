@@ -21,34 +21,68 @@ class _RecipeState extends State<Recipe> {
         length: 3,
         child: Scaffold(
           appBar: AppBar(
-            
+            toolbarHeight: 180,
             bottom: TabBar(
               tabs: [
-                Tab(text: 'FIRST'),
-                Tab(text: 'SECOND',),
+                Tab(
+                  text: 'FIRST',
+                ),
+                Tab(
+                  text: 'SECOND',
+                ),
                 Tab(text: 'THIRD'),
               ],
             ),
-            title:
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: AspectRatio(
-                  aspectRatio: 16/9,
-                  child: Container(
-                    color: Colors.grey,
-                  )
-                )
+            title: Container(
+              width: MediaQuery.of(context).size.width,
+              height: 200,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/kill.jpg'),
+                  fit: BoxFit.cover,
+                ),
               ),
+            ),
           ),
           body: TabBarView(
             children: [
-             Text('1'),
-             Text('2'),
-             Text('3')
+              Ingredients(),
+              Instruction(),
+              Comments(),
             ],
           ),
         ),
       ),
     );
+  }
+}
+
+class Ingredients extends StatelessWidget {
+  const Ingredients({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // kerjain di sini
+    return Text("Ingredients");
+  }
+}
+
+class Instruction extends StatelessWidget {
+  const Instruction({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // kerjain di sini
+    return Text("Instruction");
+  }
+}
+
+class Comments extends StatelessWidget {
+  const Comments({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // kerjain di sini
+    return Text("Comments");
   }
 }
