@@ -13,46 +13,87 @@ class Recipe extends StatefulWidget {
   _RecipeState createState() => _RecipeState();
 }
 
+// class _RecipeState extends State<Recipe> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       home: DefaultTabController(
+//         length: 3,
+//         child: Scaffold(
+//           appBar: AppBar(
+//             toolbarHeight: 180,
+//             bottom: TabBar(
+//               tabs: [
+//                 Tab(
+//                   text: 'FIRST',
+//                 ),
+//                 Tab(
+//                   text: 'SECOND',
+//                 ),
+//                 Tab(text: 'THIRD'),
+//               ],
+//             ),
+//             title: Container(
+//               width: MediaQuery.of(context).size.width,
+//               height: 200,
+//               decoration: BoxDecoration(
+//                 image: DecorationImage(
+//                   image: AssetImage('assets/images/kill.jpg'),
+//                   fit: BoxFit.cover,
+//                 ),
+//               ),
+//             ),
+//           ),
+//           body: TabBarView(
+//             children: [
+//               Ingredients(),
+//               Instruction(),
+//               Comments(),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
+
 class _RecipeState extends State<Recipe> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          appBar: AppBar(
-            toolbarHeight: 180,
-            bottom: TabBar(
-              tabs: [
-                Tab(
-                  text: 'FIRST',
-                ),
-                Tab(
-                  text: 'SECOND',
-                ),
-                Tab(text: 'THIRD'),
-              ],
-            ),
-            title: Container(
-              width: MediaQuery.of(context).size.width,
-              height: 200,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/kill.jpg'),
-                  fit: BoxFit.cover,
-                ),
+    return CustomScrollView(
+      slivers: <Widget>[
+        SliverAppBar(
+          expandedHeight: 250,
+          floating: false,
+          pinned: true,
+          flexibleSpace: FlexibleSpaceBar(
+            centerTitle: true,
+            title: Text(
+              "Recipe Name",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
               ),
             ),
-          ),
-          body: TabBarView(
-            children: [
-              Ingredients(),
-              Instruction(),
-              Comments(),
-            ],
+            background: Image(
+              image: AssetImage('assets/images/kill.jpg'),
+              fit: BoxFit.cover,
+            ),
           ),
         ),
-      ),
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) => Padding(
+              padding: const EdgeInsets.all(8),
+              child: Container(
+                height: 75,
+                color: Colors.black,
+              ),
+            ),
+            childCount: 10,
+          ),
+        ),
+      ],
     );
   }
 }
@@ -64,23 +105,20 @@ class Ingredients extends StatelessWidget {
   Widget build(BuildContext context) {
     // kerjain di sini
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Expanded(
-        child:
-          ListView.builder(
-          itemCount: 5,
-          itemBuilder: (BuildContext context, int index) {
-            return ListTile(
-                leading: const Icon(Icons.list),
-                trailing: const Text(
-                  "GFG",
-                  style: TextStyle(color: Colors.green, fontSize: 15),
-                ),
-                title: Text("List item $index"));
-          }),
-      )
-        
-    );
+        resizeToAvoidBottomInset: false,
+        body: Expanded(
+          child: ListView.builder(
+              itemCount: 5,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                    leading: const Icon(Icons.list),
+                    trailing: const Text(
+                      "GFG",
+                      style: TextStyle(color: Colors.green, fontSize: 15),
+                    ),
+                    title: Text("List item $index"));
+              }),
+        ));
   }
 }
 
