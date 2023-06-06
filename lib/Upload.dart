@@ -19,6 +19,7 @@ class _UploadState extends State<Upload> {
   final _formKey = GlobalKey();
   final List _ingredientsList = [''];
   final List _instructionList = [''];
+  final List _toolsList = [''];
 
   RecipeType? _type = RecipeType.meat;
 
@@ -119,6 +120,40 @@ class _UploadState extends State<Upload> {
                   height: 20,
                 ),
                 itemCount: _instructionList.length,
+              ),
+              Padding(
+                padding:
+                    EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 20),
+                child: Text(
+                  "Alat Masak",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+              ListView.separated(
+                padding: EdgeInsets.only(left: 20, right: 20),
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemBuilder: (context, index) => Row(
+                  children: [
+                    Expanded(
+                      child: DynamicTextField(
+                        key: UniqueKey(),
+                        initialValue: _toolsList[index],
+                        onChanged: (v) => _toolsList[index] = v,
+                        hintText: "Masukkan alat masak...",
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    _textfieldBtn(index, _toolsList),
+                  ],
+                ),
+                separatorBuilder: (context, index) => const SizedBox(
+                  height: 20,
+                ),
+                itemCount: _toolsList.length,
               ),
               ListTile(
                 title: const Text("Daging"),
