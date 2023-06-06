@@ -60,41 +60,88 @@ class Recipe extends StatefulWidget {
 class _RecipeState extends State<Recipe> {
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: <Widget>[
-        SliverAppBar(
-          expandedHeight: 250,
-          floating: false,
-          pinned: true,
-          flexibleSpace: FlexibleSpaceBar(
-            centerTitle: true,
-            title: Text(
-              "Recipe Name",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-              ),
-            ),
-            background: Image(
-              image: AssetImage('assets/images/kill.jpg'),
-              fit: BoxFit.cover,
-            ),
+    return Scaffold(
+      body: DefaultTabController(
+        length: 3,
+        child: NestedScrollView(
+          body: TabBarView(
+            children: [
+              Ingredients(),
+              Instruction(),
+              Comments(),
+            ],
           ),
-        ),
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (context, index) => Padding(
-              padding: const EdgeInsets.all(8),
-              child: Container(
-                height: 75,
-                color: Colors.black,
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              SliverAppBar(
+                expandedHeight: 200,
+                floating: false,
+                pinned: true,
+                flexibleSpace: FlexibleSpaceBar(
+                  centerTitle: true,
+                  title: Text(
+                    "Recipe Name",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
+                  ),
+                  background: Image(
+                    image: AssetImage('assets/images/kill.jpg'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-            ),
-            childCount: 10,
-          ),
+              SliverPersistentHeader(
+                delegate: _SliverAppBarDeligate(
+                  TabBar(
+                    labelColor: Colors.blue,
+                    unselectedLabelColor: Colors.grey,
+                    tabs: [
+                      Tab(
+                        text: 'Ingredients',
+                      ),
+                      Tab(
+                        text: 'Instruction',
+                      ),
+                      Tab(text: 'Comments'),
+                    ],
+                  ),
+                ),
+                pinned: true,
+              )
+            ];
+          },
         ),
-      ],
+      ),
     );
+  }
+}
+
+class _SliverAppBarDeligate extends SliverPersistentHeaderDelegate {
+  _SliverAppBarDeligate(this._tabBar);
+
+  final TabBar _tabBar;
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return new Container(
+      child: _tabBar,
+    );
+  }
+
+  @override
+  // TODO: implement maxExtent
+  double get maxExtent => _tabBar.preferredSize.height;
+
+  @override
+  // TODO: implement minExtent
+  double get minExtent => _tabBar.preferredSize.height;
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
+    return false;
   }
 }
 
