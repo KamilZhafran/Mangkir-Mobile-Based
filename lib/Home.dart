@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Recipe()),
+                        MaterialPageRoute(builder: (context) => RecipePage()),
                       );
                     },
                     child: Container(
@@ -130,7 +130,7 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Recipe()),
+                        MaterialPageRoute(builder: (context) => RecipePage()),
                       );
                     },
                     child: Container(
