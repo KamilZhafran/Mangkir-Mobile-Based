@@ -8,7 +8,6 @@ import 'package:tubes_app/RecipePage.dart';
 import 'package:tubes_app/FilterPage.dart';
 import 'model/Recipe.dart';
 import 'package:http/http.dart' as http;
-
 void main() {
   runApp(const Home());
 }

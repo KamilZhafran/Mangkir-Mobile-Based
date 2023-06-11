@@ -19,8 +19,6 @@ class LoginPage extends StatelessWidget {
     final Uri url = Uri.parse('http://192.168.0.110:8000/api/login');
     final Map<String, String> body = {'email': email, 'password': password};
 
-    print("email: $email\tpassword: $password");
-
     final response = await http.post(
       url,
       headers: headers,
@@ -33,6 +31,7 @@ class LoginPage extends StatelessWidget {
       final sharedPreferences = await SharedPreferences.getInstance();
       final token = jsonEncode(responseBody['token']);
       sharedPreferences.setString('token', token);
+      sharedPreferences.setString('email', email);
 
       Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
     } else {
