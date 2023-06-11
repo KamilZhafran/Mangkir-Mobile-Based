@@ -10,6 +10,7 @@ dependencies:
   carousel_slider: ^4.2.1
   flutter:
     sdk: flutter
+  flutter_rating_bar: ^4.0.1
   flutter_svg: ^2.0.5
   http: ^0.13.6
   fluttertoast: ^8.0.7
@@ -19,6 +20,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  flutter_swiper: ^1.1.6
 
 flutter:
   uses-material-design: true
