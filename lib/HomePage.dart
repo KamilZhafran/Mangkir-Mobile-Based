@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:tubes_app/Login.dart';
+import 'package:tubes_app/LoginPage.dart';
 import 'package:tubes_app/RecipePage.dart';
-import 'Recipe.dart';
+import 'model/Recipe.dart';
 import 'package:http/http.dart' as http;
 
 void main() {
@@ -13,12 +13,13 @@ void main() {
 }
 
 Future<List<Recipe>> fetchRecipe() async {
-  final res = await http.get(Uri.parse('http://192.168.0.110:8000/api/recipes'));
+  final res =
+      await http.get(Uri.parse('http://192.168.0.110:8000/api/recipes'));
   if (res.statusCode == 200) {
     var data = jsonDecode(res.body);
     var parsed = data.cast<Map<String, dynamic>>();
     return parsed.map<Recipe>((json) => Recipe.fromJson(json)).toList();
-  }else{
+  } else {
     throw Exception('Failed');
   }
 }

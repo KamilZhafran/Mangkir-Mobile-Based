@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:tubes_app/Home.dart';
-import 'package:tubes_app/Login.dart';
-import 'package:tubes_app/Upload.dart';
+import 'package:tubes_app/HomePage.dart';
+import 'package:tubes_app/LoginPage.dart';
+import 'package:tubes_app/UploadPage.dart';
 
-import 'Home.dart';
+import 'HomePage.dart';
 
 void main() {
   runApp(MyApp());
