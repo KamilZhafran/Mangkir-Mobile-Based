@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:tubes_app/HomePage.dart';
 import 'package:tubes_app/RegisterPage.dart';
 import 'package:tubes_app/main.dart';
 import 'package:http/http.dart' as http; // error nya dari sini
+import 'package:shared_preferences/shared_preferences.dart';
 
 TextEditingController emailController = TextEditingController();
 TextEditingController passwordController = TextEditingController();
@@ -12,7 +14,7 @@ TextEditingController passwordController = TextEditingController();
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
-  Future<void> loginUser(String email, String password) async {
+  Future<void> loginUser(String email, String password, BuildContext context) async {
     final Map<String, String> headers = {'Content-Type': 'application/json'};
     final Uri url = Uri.parse('http://192.168.0.110:8000/api/login');
     final Map<String, String> body = {'email': email, 'password': password};
@@ -24,12 +26,21 @@ class LoginPage extends StatelessWidget {
       headers: headers,
       body: jsonEncode(body),
     );
-    print(response);
+    final responseBody = jsonDecode(response.body);
+
     if (response.statusCode == 200) {
-      print('masuk');
+      // Store the token object as a JSON string in SharedPreferences
+      final sharedPreferences = await SharedPreferences.getInstance();
+      final token = jsonEncode(responseBody['token']);
+      sharedPreferences.setString('token', token);
+
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
     } else {
       // Handle error response
-      print('error');
+      final snackBar = SnackBar(
+        content: Text('Login gagal. cek lagi email dan passwordnya!!!'),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
 
@@ -130,7 +141,7 @@ class LoginPage extends StatelessWidget {
                           String email = emailController.text;
                           String password = passwordController.text;
 
-                          loginUser(email, password);
+                          loginUser(email, password, context);
                         },
                         // button untuk login
                         style: ElevatedButton.styleFrom(
