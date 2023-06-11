@@ -1,11 +1,26 @@
+import 'dart:convert';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tubes_app/Login.dart';
-import 'package:tubes_app/Recipe.dart';
+import 'package:tubes_app/RecipePage.dart';
+import 'Recipe.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(const Home());
+}
+
+Future<List<Recipe>> fetchRecipe() async {
+  final res = await http.get(Uri.parse('http://192.168.0.110:8000/api/recipes'));
+  if (res.statusCode == 200) {
+    var data = jsonDecode(res.body);
+    var parsed = data.cast<Map<String, dynamic>>();
+    return parsed.map<Recipe>((json) => Recipe.fromJson(json)).toList();
+  }else{
+    throw Exception('Failed');
+  }
 }
 
 class Home extends StatelessWidget {
@@ -28,6 +43,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late Future<List<Recipe>> recipes;
+
+  @override
+  void initState() {
+    super.initState();
+    recipes = fetchRecipe();
+    print(recipes);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -88,7 +112,7 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Recipe()),
+                        MaterialPageRoute(builder: (context) => RecipePage()),
                       );
                     },
                     child: Container(
@@ -130,7 +154,7 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => Recipe()),
+                        MaterialPageRoute(builder: (context) => RecipePage()),
                       );
                     },
                     child: Container(
