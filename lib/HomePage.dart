@@ -46,6 +46,29 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late Future<List<Recipe>> recipes;
 
+  List imagesCarousel = [
+    'assets/images/Picture1.png',
+    'assets/images/Picture2.png',
+    'assets/images/Picture3.png',
+  ];
+
+  List imgGrid = [
+    'assets/images/Picture1.png',
+    'assets/images/Picture2.png',
+    'assets/images/Picture3.png',
+    'assets/images/Picture1.png',
+    'assets/images/Picture2.png',
+    'assets/images/Picture3.png',
+    'assets/images/Picture1.png',
+    'assets/images/Picture2.png',
+    'assets/images/Picture3.png',
+    'assets/images/Picture1.png',
+    'assets/images/Picture2.png',
+    'assets/images/Picture3.png',
+    'assets/images/Picture1.png',
+    'assets/images/Picture2.png',
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -117,8 +140,9 @@ class _HomePageState extends State<HomePage> {
         mainAxisSize: MainAxisSize.max,
         children: [
           CarouselSlider(
-            options: CarouselOptions(height: 200.0),
-            items: [1, 2, 3, 4, 5].map((i) {
+            options: CarouselOptions(height: 200.0, autoPlay: true,
+            autoPlayAnimationDuration: const Duration(milliseconds: 800)),
+            items: imagesCarousel.map((i) {
               return Builder(
                 builder: (BuildContext context) {
                   return GestureDetector(
@@ -131,7 +155,11 @@ class _HomePageState extends State<HomePage> {
                     child: Container(
                       width: MediaQuery.of(context).size.width,
                       margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                      decoration: BoxDecoration(color: Colors.amber),
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage(i), fit: BoxFit.cover
+                          ),
+                          color: Colors.amber),
                       child: Center(
                         child: Text(
                           '$i',
@@ -161,7 +189,7 @@ class _HomePageState extends State<HomePage> {
               mainAxisSpacing: 10,
               padding: const EdgeInsets.all(20),
               children:
-                  [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map((i) {
+                  imgGrid.map((i) {
                 return Builder(builder: (BuildContext context) {
                   return GestureDetector(
                     onTap: () {
@@ -173,7 +201,11 @@ class _HomePageState extends State<HomePage> {
                     child: Container(
                       width: MediaQuery.of(context).size.width,
                       margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                      decoration: BoxDecoration(color: Colors.teal),
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                            image: AssetImage(i), fit: BoxFit.cover
+                          ),
+                          color: Colors.teal),
                       child: Center(
                         child: Text(
                           '$i',
