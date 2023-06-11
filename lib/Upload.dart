@@ -7,6 +7,7 @@ void main() {
 }
 
 enum RecipeType { meat, vegetable, seafood, appetizer, dessert }
+TextEditingController titleController = TextEditingController();
 
 class Upload extends StatefulWidget {
   const Upload({Key? key}) : super(key: key);
@@ -41,6 +42,7 @@ class _UploadState extends State<Upload> {
               Padding(
                 padding: EdgeInsets.only(top: 20, left: 20, right: 20),
                 child: TextField(
+                  controller: titleController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(50),
@@ -209,6 +211,7 @@ class _UploadState extends State<Upload> {
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20, top: 20),
                 child: ElevatedButton(
+                  
                   style: ButtonStyle(
                     minimumSize: MaterialStateProperty.all<Size>(
                         Size(double.infinity, 50)),
@@ -223,24 +226,26 @@ class _UploadState extends State<Upload> {
                   ),
                   child: Text("Upload"),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) {
-                        return AlertDialog(
-                          title: const Text("Berhasil upload!"),
-                          content: const Text(
-                              "Data yang anda masukkan berhasil diunggah"),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Text("OK"),
-                            ),
-                          ],
-                        );
-                      }),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) {
+                    //     return AlertDialog(
+                    //       title: const Text("Berhasil upload!"),
+                    //       content: const Text(
+                    //           "Data yang anda masukkan berhasil diunggah"),
+                    //       actions: [
+                    //         TextButton(
+                    //           onPressed: () {
+                    //             Navigator.pop(context);
+                    //           },
+                    //           child: const Text("OK"),
+                    //         ),
+                    //       ],
+                    //     );
+                    //   }),
+                    // );
+                    String judul = titleController.text;
+                    print(_ingredientsList);
                   },
                 ),
               ),

@@ -1,10 +1,37 @@
+import 'dart:convert';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:tubes_app/Register.dart';
 import 'package:tubes_app/main.dart';
+import 'package:http/http.dart' as http; // error nya dari sini
+
+TextEditingController emailController = TextEditingController();
+TextEditingController passwordController = TextEditingController();
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
+
+  Future<void> loginUser(String email, String password) async {
+    final Map<String, String> headers = {'Content-Type': 'application/json'};
+    final Uri url = Uri.parse('http://192.168.0.110:8000/api/login');
+    final Map<String, String> body = {'email': email, 'password': password};
+
+    print("email: $email\tpassword: $password");
+    
+    final response = await http.post(
+      url,
+      headers: headers,
+      body: jsonEncode(body),
+    );
+    print(response);
+    if (response.statusCode == 200) {
+      print('masuk');
+    } else {
+      // Handle error response
+      print('error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +78,7 @@ class LoginPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 15), // vertical spacing
                     TextFormField( // form input for email
+                      controller: emailController,
                       style: const TextStyle(color: Colors.black),
                       decoration: const InputDecoration(
                         labelText: 'Email',
@@ -70,6 +98,7 @@ class LoginPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 10), // for vertical spacing
                     TextFormField( // inpnut password
+                      controller: passwordController,
                       // hide the inputted value
                       obscureText: true,
                       // form setting
@@ -94,7 +123,12 @@ class LoginPage extends StatelessWidget {
                         onPressed: () {
                           // Handle login button press
                           // dipindahin ke home screen
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
+                          // Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
+
+                          String email = emailController.text;
+                          String password = passwordController.text;
+
+                          loginUser(email, password);
                         },
                         // button untuk login
                         style: ElevatedButton.styleFrom( 
