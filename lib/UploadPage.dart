@@ -7,7 +7,9 @@ void main() {
 }
 
 enum RecipeType { meat, vegetable, seafood, appetizer, dessert }
+
 TextEditingController titleController = TextEditingController();
+TextEditingController timeController = TextEditingController();
 
 class Upload extends StatefulWidget {
   const Upload({Key? key}) : super(key: key);
@@ -157,6 +159,38 @@ class _UploadState extends State<Upload> {
                 ),
                 itemCount: _toolsList.length,
               ),
+              Padding(
+                padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+                child: Text(
+                  "Durasi Masak (menit)",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 20, left: 20, right: 20),
+                child: TextField(
+                  controller: timeController,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(50),
+                      borderSide: BorderSide.none,
+                    ),
+                    filled: true,
+                    hintText: 'Masukkan durasi...',
+                    hintStyle: TextStyle(color: Colors.grey),
+                  ),
+                ),
+              ),
+              Padding(
+                padding:
+                    EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 20),
+                child: Text(
+                  "Kategori Makanan",
+                  textAlign: TextAlign.left,
+                  style: TextStyle(fontSize: 20),
+                ),
+              ),
               ListTile(
                 title: const Text("Daging"),
                 leading: Radio<RecipeType>(
@@ -246,7 +280,6 @@ class _UploadState extends State<Upload> {
               Padding(
                 padding: EdgeInsets.only(left: 20, right: 20, top: 20),
                 child: ElevatedButton(
-                  
                   style: ButtonStyle(
                     minimumSize: MaterialStateProperty.all<Size>(
                         Size(double.infinity, 50)),
