@@ -1,6 +1,10 @@
 // create a blank screen here with state
 
+import 'dart:collection';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(const Upload());
@@ -8,8 +12,22 @@ void main() {
 
 enum RecipeType { meat, vegetable, seafood, appetizer, dessert }
 
+var recipeData = Map<String, dynamic>();
+
 TextEditingController titleController = TextEditingController();
 TextEditingController timeController = TextEditingController();
+
+Future<Map<String, dynamic>> uploadRecipe(Map<String, dynamic> data) async {
+  final res = await http.post(
+    Uri.parse('http://192.168.0.111:8000/api/recipe'),
+    body: jsonEncode(data),
+  );
+  if (res.statusCode == 200) {
+    return jsonDecode(res.body);
+  } else {
+    throw Exception('Failed');
+  }
+}
 
 class Upload extends StatefulWidget {
   const Upload({Key? key}) : super(key: key);
@@ -61,7 +79,7 @@ class _UploadState extends State<Upload> {
                 padding:
                     EdgeInsets.only(top: 20, left: 20, right: 20, bottom: 20),
                 child: Text(
-                  "Tipe Resep",
+                  "Bahan-bahan Resep",
                   textAlign: TextAlign.left,
                   style: TextStyle(fontSize: 20),
                 ),
@@ -293,7 +311,7 @@ class _UploadState extends State<Upload> {
                         MaterialStateProperty.all<Color>(Colors.grey),
                   ),
                   child: Text("Upload"),
-                  onPressed: () {
+                  onPressed: () async {
                     // Navigator.push(
                     //   context,
                     //   MaterialPageRoute(builder: (context) {
@@ -312,8 +330,25 @@ class _UploadState extends State<Upload> {
                     //     );
                     //   }),
                     // );
-                    String judul = titleController.text;
-                    print(_ingredientsList);
+
+                    recipeData['email'] = 'ivy@mail.com';
+                    recipeData['judul'] = titleController.text;
+                    recipeData['backstory'] = '';
+                    recipeData['asalDaerah'] = 'Purwokerto, Jawa';
+                    recipeData['servings'] = 1;
+                    recipeData['durasi_menit'] = timeController.text;
+                    recipeData['foto'] = '';
+                    recipeData['rating'] = null;
+                    recipeData['video'] = '';
+                    recipeData['numReviews'] = 0;
+                    recipeData['ingredients'] = _ingredientsList;
+                    recipeData['steps'] = _instructionList;
+                    recipeData['tools'] = _toolsList;
+
+                    print(recipeData.toString());
+
+                    var res = await uploadRecipe(recipeData);
+                    print(res);
                   },
                 ),
               ),
