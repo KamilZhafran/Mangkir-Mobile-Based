@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tubes_app/LoginPage.dart';
 import 'package:tubes_app/RecipePage.dart';
+import 'package:tubes_app/FilterPage.dart';
 import 'model/Recipe.dart';
 import 'package:http/http.dart' as http;
 
@@ -66,21 +67,33 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
-              padding: EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
               child: SizedBox(
-                width: 250,
-                child: TextField(
-                  maxLines: 1,
-                  textAlignVertical: TextAlignVertical.bottom,
-                  decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.search),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide.none,
-                      ),
-                      filled: true,
-                      hintStyle: TextStyle(color: Colors.grey),
-                      hintText: "Cari Resep..."),
+                width: 300, 
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => FilterPage()),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10), 
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(25), 
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.search),
+                        const SizedBox(width: 10),
+                        Text(
+                          'Cari Resep...',
+                          style: TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
