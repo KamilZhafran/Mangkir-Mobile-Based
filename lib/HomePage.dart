@@ -7,7 +7,6 @@ import 'package:tubes_app/LoginPage.dart';
 import 'package:tubes_app/RecipePage.dart';
 import 'model/Recipe.dart';
 import 'package:http/http.dart' as http;
-
 void main() {
   runApp(const Home());
 }
