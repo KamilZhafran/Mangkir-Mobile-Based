@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubes_app/LoginPage.dart';
 import 'package:tubes_app/main.dart';
 import 'package:http/http.dart' as http;
@@ -16,11 +17,13 @@ Future<void> registerUser(_name, _password, _email, BuildContext context) async 
     }
   );
   if (res.statusCode == 200){
+    final sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString('email', _email);
     Navigator.push(context, MaterialPageRoute(
-      builder: (context) => LoginPage(),
+      builder: (context) => BottomNav(),
     ));
     final snackBar = SnackBar(
-        content: Text('Registrasi Berhasil. Silahkan Login'),
+        content: Text('Registrasi Berhasil'),
       );
       ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }else{
