@@ -34,8 +34,7 @@ class LoginPage extends StatelessWidget {
       sharedPreferences.setString('token', token);
       sharedPreferences.setString('email', email);
 
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => BottomNav()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
     } else {
       // Handle error response
       final snackBar = SnackBar(
