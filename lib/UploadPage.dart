@@ -48,6 +48,7 @@ class _UploadState extends State<Upload> {
   final List _toolsList = [''];
 
   RecipeType? _type = RecipeType.meat;
+  String kategori = 'Daging';
 
   @override
   Widget build(BuildContext context) {
@@ -221,6 +222,7 @@ class _UploadState extends State<Upload> {
                   groupValue: _type,
                   onChanged: (RecipeType? value) {
                     setState(() {
+                      kategori = "Daging";
                       _type = value;
                     });
                   },
@@ -233,6 +235,7 @@ class _UploadState extends State<Upload> {
                   groupValue: _type,
                   onChanged: (RecipeType? value) {
                     setState(() {
+                      kategori = "Sayur";
                       _type = value;
                     });
                   },
@@ -245,6 +248,7 @@ class _UploadState extends State<Upload> {
                   groupValue: _type,
                   onChanged: (RecipeType? value) {
                     setState(() {
+                      kategori = "Boga Bahari";
                       _type = value;
                     });
                   },
@@ -257,6 +261,7 @@ class _UploadState extends State<Upload> {
                   groupValue: _type,
                   onChanged: (RecipeType? value) {
                     setState(() {
+                      kategori = "Makanan Pembuka";
                       _type = value;
                     });
                   },
@@ -269,6 +274,7 @@ class _UploadState extends State<Upload> {
                   groupValue: _type,
                   onChanged: (RecipeType? value) {
                     setState(() {
+                      kategori = "Makanan Penutup";
                       _type = value;
                     });
                   },
@@ -340,6 +346,7 @@ class _UploadState extends State<Upload> {
                     recipeData['judul'] = titleController.text;
                     recipeData['backstory'] = 'dulu nemu di kolong jembatan';
                     recipeData['asalDaerah'] = 'Purwokerto, Jawa';
+                    recipeData['kategori'] = kategori;
                     recipeData['servings'] = 1;
                     recipeData['durasi_menit'] = timeController.text;
                     recipeData['foto'] = null;

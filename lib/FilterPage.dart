@@ -13,11 +13,11 @@ class _FilterPageState extends State<FilterPage> {
   String? selectedCookingTimeCategory;
 
   final List<String> foodCategories = [
-    'Meat',
-    'Vegetables',
-    'Seafood',
-    'Appetizer',
-    'Dessert',
+    'Daging',
+    'Sayur',
+    'Boga Bahari',
+    'Makanan Pembuka',
+    'Makanan Penutup',
   ];
 
   final List<String> cookingTimeCategories = [
