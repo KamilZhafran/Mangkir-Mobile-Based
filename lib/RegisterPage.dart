@@ -6,9 +6,9 @@ import 'package:tubes_app/LoginPage.dart';
 import 'package:tubes_app/main.dart';
 import 'package:http/http.dart' as http;
 
-Future<Map<String, dynamic>> registerUser(_name, _password, _email) async {
+Future<void> registerUser(_name, _password, _email, BuildContext context) async {
   final res = await http.post(
-    Uri.parse('http://192.168.0.103:8000/api/register'),
+    Uri.parse('http://192.168.0.110:8000/api/register'),
     body: {
       'name': _name,
       'password': _password,
@@ -16,9 +16,19 @@ Future<Map<String, dynamic>> registerUser(_name, _password, _email) async {
     }
   );
   if (res.statusCode == 200){
-    return jsonDecode(res.body);
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) => LoginPage(),
+    ));
+    final snackBar = SnackBar(
+        content: Text('Registrasi Berhasil. Silahkan Login'),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }else{
-    throw Exception('Failed');
+    print(jsonDecode(res.body));
+    final snackBar = SnackBar(
+        content: Text("Pastikan semua data diinput dan pastikan data sudah benar"),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
 
@@ -144,9 +154,7 @@ class _RegisterState extends State<RegisterState> {
                           const EdgeInsets.only(top: 50, right: 50, left: 50),
                       child: ElevatedButton(
                         onPressed: () async {
-                          var res = await registerUser(nameInput.text, passwordInput.text, emailInput.text);
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => MyApp()));
+                          registerUser(nameInput.text, passwordInput.text, emailInput.text, context);
                         },
                         // button untuk login
                         style: ElevatedButton.styleFrom(

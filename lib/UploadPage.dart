@@ -6,6 +6,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tubes_app/HomePage.dart';
 
 void main() {
   runApp(const Upload());
@@ -18,7 +19,7 @@ var recipeData = Map<String, dynamic>();
 TextEditingController titleController = TextEditingController();
 TextEditingController timeController = TextEditingController();
 
-Future<Map<String, dynamic>> uploadRecipe(Map<String, dynamic> data) async {
+Future<void> uploadRecipe(Map<String, dynamic> data, BuildContext context) async {
   print(jsonEncode(data));
   final Map<String, String> headers = {'Content-Type': 'application/json'};
   final res = await http.post(
@@ -27,10 +28,14 @@ Future<Map<String, dynamic>> uploadRecipe(Map<String, dynamic> data) async {
     body: jsonEncode(data),
   );
   if (res.statusCode == 200) {
-    return jsonDecode(res.body);
+    Navigator.push(context, MaterialPageRoute(
+      builder: (context) => const Home(),
+    ));
   } else {
-    print(res.statusCode);
-    throw Exception(jsonDecode(res.body));
+    final snackBar = SnackBar(
+        content: Text('Mohon lengkapi data masakan'),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
 
@@ -359,8 +364,7 @@ class _UploadState extends State<Upload> {
 
                     print(recipeData.toString());
 
-                    var res = await uploadRecipe(recipeData);
-                    print(res);
+                    await uploadRecipe(recipeData, context);
                   },
                 ),
               ),
