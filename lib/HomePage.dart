@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubes_app/LoginPage.dart';
 import 'package:tubes_app/RecipePage.dart';
 import 'package:tubes_app/FilterPage.dart';
 import 'model/Recipe.dart';
 import 'package:http/http.dart' as http;
+
 void main() {
   runApp(const Home());
 }
@@ -45,6 +47,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late Future<List<Recipe>> recipes;
+
+  Future<void> logout() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    await prefs.remove('email');
+  }
 
   List imagesCarousel = [
     'assets/images/Picture1.png',
@@ -91,7 +99,7 @@ class _HomePageState extends State<HomePage> {
             Padding(
               padding: const EdgeInsets.all(10),
               child: SizedBox(
-                width: 300, 
+                width: 300,
                 child: GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -100,10 +108,11 @@ class _HomePageState extends State<HomePage> {
                     );
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10), 
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 10),
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(25), 
+                      borderRadius: BorderRadius.circular(25),
                     ),
                     child: Row(
                       children: [
@@ -123,9 +132,45 @@ class _HomePageState extends State<HomePage> {
               padding: EdgeInsets.all(10),
               child: GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginPage()),
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => LoginPage()),
+                  // );
+                  AlertDialog alert = AlertDialog(
+                    title: Text('Are you sure?'),
+                    content: SingleChildScrollView(
+                      child: ListBody(
+                        children: const <Widget>[
+                          Text('You will be logged out'),
+                        ],
+                      ),
+                    ),
+                    actions: <Widget>[
+                      TextButton(
+                        child: const Text('Cancel'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      TextButton(
+                        child: const Text('Logout'),
+                        onPressed: () {
+                          logout();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginPage()),
+                          );
+                        },
+                      ),
+                    ],
+                  );
+
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return alert;
+                    },
                   );
                 },
                 child: CircleAvatar(
@@ -140,8 +185,10 @@ class _HomePageState extends State<HomePage> {
         mainAxisSize: MainAxisSize.max,
         children: [
           CarouselSlider(
-            options: CarouselOptions(height: 200.0, autoPlay: true,
-            autoPlayAnimationDuration: const Duration(milliseconds: 800)),
+            options: CarouselOptions(
+                height: 200.0,
+                autoPlay: true,
+                autoPlayAnimationDuration: const Duration(milliseconds: 800)),
             items: imagesCarousel.map((i) {
               return Builder(
                 builder: (BuildContext context) {
@@ -157,8 +204,7 @@ class _HomePageState extends State<HomePage> {
                       margin: const EdgeInsets.symmetric(horizontal: 5.0),
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage(i), fit: BoxFit.cover
-                          ),
+                              image: AssetImage(i), fit: BoxFit.cover),
                           color: Colors.amber),
                       child: Center(
                         child: Text(
@@ -188,8 +234,7 @@ class _HomePageState extends State<HomePage> {
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
               padding: const EdgeInsets.all(20),
-              children:
-                  imgGrid.map((i) {
+              children: imgGrid.map((i) {
                 return Builder(builder: (BuildContext context) {
                   return GestureDetector(
                     onTap: () {
@@ -203,8 +248,7 @@ class _HomePageState extends State<HomePage> {
                       margin: const EdgeInsets.symmetric(horizontal: 5.0),
                       decoration: BoxDecoration(
                           image: DecorationImage(
-                            image: AssetImage(i), fit: BoxFit.cover
-                          ),
+                              image: AssetImage(i), fit: BoxFit.cover),
                           color: Colors.teal),
                       child: Center(
                         child: Text(

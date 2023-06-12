@@ -14,9 +14,10 @@ TextEditingController passwordController = TextEditingController();
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
-  Future<void> loginUser(String email, String password, BuildContext context) async {
+  Future<void> loginUser(
+      String email, String password, BuildContext context) async {
     final Map<String, String> headers = {'Content-Type': 'application/json'};
-    final Uri url = Uri.parse('http://192.168.0.110:8000/api/login');
+    final Uri url = Uri.parse('http://192.168.1.22:8000/api/login');
     final Map<String, String> body = {'email': email, 'password': password};
 
     final response = await http.post(
@@ -33,7 +34,8 @@ class LoginPage extends StatelessWidget {
       sharedPreferences.setString('token', token);
       sharedPreferences.setString('email', email);
 
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => BottomNav()));
     } else {
       // Handle error response
       final snackBar = SnackBar(
@@ -141,6 +143,9 @@ class LoginPage extends StatelessWidget {
                           String password = passwordController.text;
 
                           loginUser(email, password, context);
+
+                          emailController.clear();
+                          passwordController.clear();
                         },
                         // button untuk login
                         style: ElevatedButton.styleFrom(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubes_app/HomePage.dart';
 import 'package:tubes_app/LoginPage.dart';
 import 'package:tubes_app/UploadPage.dart';
@@ -33,6 +34,25 @@ class BottomNav extends StatefulWidget {
 class _BottomNav extends State<BottomNav> {
   int selected = 0;
   PageController pc = PageController();
+
+  Future<void> checkLoggedIn() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var token = prefs.getString('email');
+
+    setState(() {
+      if (token == null) {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => LoginPage()));
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    checkLoggedIn();
+  }
 
   @override
   Widget build(BuildContext context) {

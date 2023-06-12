@@ -15,6 +15,7 @@ dependencies:
   http: ^0.13.6
   fluttertoast: ^8.0.7
   shared_preferences: ^2.1.1
+  flutter_native_splash: ^2.2.19
   
 dev_dependencies:
   flutter_test:
@@ -26,3 +27,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+
+flutter_native_splash:
+  color: "#ffffff"
