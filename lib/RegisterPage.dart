@@ -1,10 +1,39 @@
+import 'dart:convert';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:tubes_app/LoginPage.dart';
 import 'package:tubes_app/main.dart';
+import 'package:http/http.dart' as http;
 
-class RegisterPage extends StatelessWidget {
-  const RegisterPage({super.key});
+Future<Map<String, dynamic>> registerUser(_name, _password, _email) async {
+  final res = await http.post(
+    Uri.parse('http://192.168.0.103:8000/api/register'),
+    body: {
+      'name': _name,
+      'password': _password,
+      'email': _email
+    }
+  );
+  if (res.statusCode == 200){
+    return jsonDecode(res.body);
+  }else{
+    throw Exception('Failed');
+  }
+}
+
+class RegisterState extends StatefulWidget {
+  const RegisterState({Key? key}) : super(key: key);
+
+  @override
+  State<RegisterState> createState() => _RegisterState();
+}
+
+class _RegisterState extends State<RegisterState> {
+
+  var nameInput = TextEditingController();
+  var passwordInput = TextEditingController();
+  var emailInput = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +98,7 @@ class RegisterPage extends StatelessWidget {
                       validator: (String? value) {
                         // buat validasi input
                       },
+                      controller: nameInput
                     ),
                     const SizedBox(height: 15), // vertical spacing
                     TextFormField(
@@ -87,6 +117,7 @@ class RegisterPage extends StatelessWidget {
                       validator: (String? value) {
                         // buat validasi input
                       },
+                      controller: emailInput,
                     ),
                     const SizedBox(height: 10), // for vertical spacing
                     TextFormField(
@@ -106,14 +137,14 @@ class RegisterPage extends StatelessWidget {
                       validator: (String? value) {
                         // nanti buat validasi input
                       },
+                      controller: passwordInput,
                     ),
                     Container(
                       margin:
                           const EdgeInsets.only(top: 50, right: 50, left: 50),
                       child: ElevatedButton(
-                        onPressed: () {
-                          // Handle sign up button press
-                          // dipindahin ke home screen
+                        onPressed: () async {
+                          var res = await registerUser(nameInput.text, passwordInput.text, emailInput.text);
                           Navigator.push(context,
                               MaterialPageRoute(builder: (context) => MyApp()));
                         },
