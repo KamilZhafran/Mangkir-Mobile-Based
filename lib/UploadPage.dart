@@ -5,6 +5,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(const Upload());
@@ -18,14 +19,18 @@ TextEditingController titleController = TextEditingController();
 TextEditingController timeController = TextEditingController();
 
 Future<Map<String, dynamic>> uploadRecipe(Map<String, dynamic> data) async {
+  print(jsonEncode(data));
+  final Map<String, String> headers = {'Content-Type': 'application/json'};
   final res = await http.post(
-    Uri.parse('http://192.168.0.111:8000/api/recipe'),
+    Uri.parse('http://192.168.0.110:8000/api/recipe'),
+    headers: headers,
     body: jsonEncode(data),
   );
   if (res.statusCode == 200) {
     return jsonDecode(res.body);
   } else {
-    throw Exception('Failed');
+    print(res.statusCode);
+    throw Exception(jsonDecode(res.body));
   }
 }
 
@@ -330,16 +335,16 @@ class _UploadState extends State<Upload> {
                     //     );
                     //   }),
                     // );
-
-                    recipeData['email'] = 'ivy@mail.com';
+                    final sharedPreferences = await SharedPreferences.getInstance();
+                    recipeData['email'] = sharedPreferences.getString('email');
                     recipeData['judul'] = titleController.text;
-                    recipeData['backstory'] = '';
+                    recipeData['backstory'] = 'dulu nemu di kolong jembatan';
                     recipeData['asalDaerah'] = 'Purwokerto, Jawa';
                     recipeData['servings'] = 1;
                     recipeData['durasi_menit'] = timeController.text;
-                    recipeData['foto'] = '';
+                    recipeData['foto'] = null;
                     recipeData['rating'] = null;
-                    recipeData['video'] = '';
+                    recipeData['video'] = null;
                     recipeData['numReviews'] = 0;
                     recipeData['ingredients'] = _ingredientsList;
                     recipeData['steps'] = _instructionList;
