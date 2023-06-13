@@ -11,7 +11,7 @@ Future<List<Recipe>> fetchMyRecipe() async {
   final email = prefs.getString('email');
   print(email);
   final Map<String, String> headers = {'Content-Type': 'application/json'};
-  final uri = Uri.parse('http://192.168.0.111:8000/api/recipes')
+  final uri = Uri.parse('http://192.168.0.105:8000/api/recipes')
       .replace(queryParameters: {'email': email});
   final res = await http.get(uri, headers: headers);
   if (res.statusCode == 200) {

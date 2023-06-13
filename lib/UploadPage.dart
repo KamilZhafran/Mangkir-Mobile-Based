@@ -24,7 +24,7 @@ Future<void> uploadRecipe(
   print(jsonEncode(data));
   final Map<String, String> headers = {'Content-Type': 'application/json'};
   final res = await http.post(
-    Uri.parse('http://192.168.0.111:8000/api/recipe'),
+    Uri.parse('http://192.168.0.105:8000/api/recipe'),
     headers: headers,
     body: jsonEncode(data),
   );

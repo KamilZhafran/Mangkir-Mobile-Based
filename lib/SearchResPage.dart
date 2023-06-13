@@ -8,7 +8,7 @@ import 'FilterPage.dart';
 Future<List<Recipe>> searchRecipe(
     String keyword, String kategori, String durasi) async {
   final Map<String, String> headers = {'Content-Type': 'application/json'};
-  final uri = Uri.parse('http://192.168.0.111:8000/api/search')
+  final uri = Uri.parse('http://192.168.0.105:8000/api/search')
       .replace(queryParameters: {
     'keyword': keyword,
     'durasi': durasi,

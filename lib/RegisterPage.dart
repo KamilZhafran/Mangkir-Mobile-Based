@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 Future<void> registerUser(
     _name, _password, _email, BuildContext context) async {
   final res = await http.post(
-      Uri.parse('http://192.168.0.111:8000/api/register'),
+      Uri.parse('http://192.168.0.105:8000/api/register'),
       body: {'name': _name, 'password': _password, 'email': _email});
   if (res.statusCode == 200) {
     final sharedPreferences = await SharedPreferences.getInstance();

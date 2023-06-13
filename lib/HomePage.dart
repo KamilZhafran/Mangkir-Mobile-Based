@@ -17,7 +17,7 @@ void main() {
 
 Future<List<Recipe>> fetchRecipe() async {
   final res =
-      await http.get(Uri.parse('http://192.168.0.111:8000/api/recipes'));
+      await http.get(Uri.parse('http://192.168.0.105:8000/api/recipes'));
   if (res.statusCode == 200) {
     var data = jsonDecode(res.body);
     var parsed = data.cast<Map<String, dynamic>>();
