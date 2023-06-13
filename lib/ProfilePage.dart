@@ -5,19 +5,19 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubes_app/LoginPage.dart';
 import 'package:tubes_app/model/Recipe.dart';
 import 'package:http/http.dart' as http;
-import 'package:tubes_app/constants/API.dart';
+import 'constants/API.dart';
 
 Future<List<Recipe>> fetchMyRecipe() async {
   final prefs = await SharedPreferences.getInstance();
   final email = prefs.getString('email');
   print(email);
   final Map<String, String> headers = {'Content-Type': 'application/json'};
-  final uri = Uri.parse('${API.BASE_URL}/recipes')
+  final uri = Uri.parse('${API.BASE_URL}/recipes/favorite')
       .replace(queryParameters: {'email': email});
   final res = await http.get(uri, headers: headers);
   if (res.statusCode == 200) {
     var data = jsonDecode(res.body);
-    var parsed = data.cast<Map<String, dynamic>>();
+    var parsed = data['dataRecipes'].cast<Map<String, dynamic>>();
     return parsed.map<Recipe>((json) => Recipe.fromJson(json)).toList();
   } else {
     throw Exception('Failed');
@@ -156,13 +156,14 @@ class _ProfilePageState extends State<ProfilePage> {
                     return Center(child: Text('Error: ${snapshot.error}'));
                   } else if (snapshot.hasData) {
                     final recipeList = snapshot.data!;
+                    print(recipeList);
                     return ListView.builder(
                       itemCount: recipeList.length,
                       itemBuilder: (context, index) {
                         final recipe = recipeList[index];
                         return GestureDetector(
                           onTap: () {
-                            print(recipe.id);
+                            print(recipe);
                           },
                           child: Container(
                             decoration: BoxDecoration(

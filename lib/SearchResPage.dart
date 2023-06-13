@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'model/Recipe.dart';
 import 'package:http/http.dart' as http;
 import 'FilterPage.dart';
-import 'package:tubes_app/constants/API.dart';
+import 'constants/API.dart';
 
 Future<List<Recipe>> searchRecipe(
     String keyword, String kategori, String durasi) async {

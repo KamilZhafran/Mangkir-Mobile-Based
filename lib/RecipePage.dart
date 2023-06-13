@@ -3,9 +3,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import './model/RecipedDetail.dart';
-import 'package:tubes_app/constants/API.dart';
+import 'constants/API.dart';
+import 'model/Recipe.dart';
 
 void main() {
   runApp(const RecipePage());
@@ -15,32 +17,96 @@ class RecipePage extends StatefulWidget {
   final int id;
   const RecipePage({Key? key, this.id = -1}) : super(key: key);
 
+  Future<Map<String, dynamic>> addFavorite() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    final String? email = prefs.getString('email');
+
+    print(email);
+    print(this.id.toString());
+
+    final res =
+        await http.post(Uri.parse('${API.BASE_URL}/recipes/favorite'), body: {
+      'email': email,
+      'id': this.id.toString(),
+    });
+
+    if (res.statusCode == 200) {
+      return jsonDecode(res.body);
+    } else {
+      throw Exception('Failed: ${res.body}');
+    }
+  }
+
+  void deleteFavorite() async {
+    final res = await http
+        .delete(Uri.parse('${API.BASE_URL}/recipes/favorite/${this.id}'));
+    if (res.statusCode == 200) {
+      print('berhasil');
+    } else {
+      throw Exception('Failed');
+    }
+  }
+
+  Future<List<RecipeDetail>> fetchRecipe() async {
+    final res = await http.get(Uri.parse('${API.BASE_URL}/recipe/${this.id}'));
+    if (res.statusCode == 200) {
+      var data = jsonDecode(res.body);
+      var parsed = data.cast<Map<String, dynamic>>();
+      return parsed
+          .map<RecipeDetail>((json) => RecipeDetail.fromJson(json))
+          .toList();
+    } else {
+      throw Exception('Failed fetching recipe detail');
+    }
+  }
+
   @override
   State<RecipePage> createState() => _RecipePageState();
 }
 
-Future<List<RecipeDetail>> fetchRecipe() async {
-  RecipePage rp = RecipePage();
-
-  final res = await http.get(Uri.parse('${API.BASE_URL}/recipe/${rp.id}'));
+Future<List<Recipe>> fetchMyRecipe() async {
+  final prefs = await SharedPreferences.getInstance();
+  final email = prefs.getString('email');
+  print(email);
+  final Map<String, String> headers = {'Content-Type': 'application/json'};
+  final uri = Uri.parse('${API.BASE_URL}/recipes/favorite')
+      .replace(queryParameters: {'email': email});
+  final res = await http.get(uri, headers: headers);
   if (res.statusCode == 200) {
     var data = jsonDecode(res.body);
-    var parsed = data.cast<Map<String, dynamic>>();
-    return parsed
-        .map<RecipeDetail>((json) => RecipeDetail.fromJson(json))
-        .toList();
+    var parsed = data['dataRecipes'].cast<Map<String, dynamic>>();
+    return parsed.map<Recipe>((json) => Recipe.fromJson(json)).toList();
   } else {
-    throw Exception('Failed');
+    throw Exception('Failed fetching favorite');
   }
 }
 
 class _RecipePageState extends State<RecipePage> {
   late Future<List<RecipeDetail>> recipes;
+  late Future<List<Recipe>> futureRecipes;
+  List<Recipe> favRecipes = [];
+  bool isFavorite = false;
+
+  void checkFavorite() {
+    for (var map in favRecipes) {
+      if (map.id == widget.id) {
+        setState(() {
+          isFavorite = true;
+        });
+        break;
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    recipes = fetchRecipe();
-    print(recipes);
+    recipes = RecipePage().fetchRecipe();
+    futureRecipes = fetchMyRecipe();
+    futureRecipes.then((value) {
+      favRecipes = value;
+    });
+    checkFavorite();
   }
 
   @override
@@ -65,12 +131,72 @@ class _RecipePageState extends State<RecipePage> {
                 pinned: true,
                 flexibleSpace: FlexibleSpaceBar(
                   centerTitle: true,
-                  title: Text(
-                    "Recipe Name ${widget.id}",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                    ),
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        "Recipe Name ${widget.id}",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
+                      IconButton(
+                        icon: isFavorite
+                            ? Icon(
+                                Icons.favorite_border,
+                                color: Colors.white,
+                              )
+                            : Icon(
+                                Icons.favorite,
+                                color: Colors.white,
+                              ),
+                        onPressed: isFavorite
+                            ? () {
+                                widget.deleteFavorite();
+                                setState(() {
+                                  isFavorite = false;
+                                });
+                              }
+                            : () async {
+                                await widget.addFavorite();
+                                setState(() {
+                                  isFavorite = true;
+                                });
+                              },
+                      ),
+                      () {
+                        for (var map in favRecipes) {
+                          if (map.id == widget.id) {
+                            isFavorite = true;
+                            break;
+                          }
+                        }
+                        if (!isFavorite) {
+                          return IconButton(
+                            onPressed: () async {
+                              await widget.addFavorite();
+                            },
+                            iconSize: 16,
+                            icon: Icon(
+                              Icons.favorite_border,
+                              color: Colors.white,
+                            ),
+                          );
+                        } else {
+                          return IconButton(
+                            onPressed: () {
+                              widget.deleteFavorite();
+                            },
+                            iconSize: 16,
+                            icon: Icon(
+                              Icons.favorite,
+                              color: Colors.white,
+                            ),
+                          );
+                        }
+                      }(),
+                    ],
                   ),
                   background: Image(
                     image: AssetImage('assets/images/kill.jpg'),

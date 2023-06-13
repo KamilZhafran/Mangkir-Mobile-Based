@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubes_app/LoginPage.dart';
 import 'package:tubes_app/main.dart';
 import 'package:http/http.dart' as http;
-import 'package:tubes_app/constants/API.dart';
+import 'constants/API.dart';
 
 Future<void> registerUser(
     _name, _password, _email, BuildContext context) async {

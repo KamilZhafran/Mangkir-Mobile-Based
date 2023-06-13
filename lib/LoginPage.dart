@@ -7,7 +7,7 @@ import 'package:tubes_app/RegisterPage.dart';
 import 'package:tubes_app/main.dart';
 import 'package:http/http.dart' as http; // error nya dari sini
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tubes_app/constants/API.dart';
+import 'constants/API.dart';
 
 TextEditingController emailController = TextEditingController();
 TextEditingController passwordController = TextEditingController();
@@ -148,8 +148,8 @@ class LoginPage extends StatelessWidget {
 
                           loginUser(email, password, context);
 
-                          emailController.clear();
-                          passwordController.clear();
+                          // emailController.clear();
+                          // passwordController.clear();
                         },
                         // button untuk login
                         style: ElevatedButton.styleFrom(
