@@ -17,7 +17,7 @@ void main() {
 
 Future<List<Recipe>> fetchRecipe() async {
   final res =
-      await http.get(Uri.parse('http://192.168.0.110:8000/api/recipes'));
+      await http.get(Uri.parse('http://192.168.0.111:8000/api/recipes'));
   if (res.statusCode == 200) {
     var data = jsonDecode(res.body);
     var parsed = data.cast<Map<String, dynamic>>();
@@ -55,28 +55,16 @@ class _HomePageState extends State<HomePage> {
     'assets/images/Picture3.png',
   ];
 
-  List imgGrid = [
+  List imgList = [
     'assets/images/Picture1.png',
     'assets/images/Picture2.png',
     'assets/images/Picture3.png',
-    'assets/images/Picture1.png',
-    'assets/images/Picture2.png',
-    'assets/images/Picture3.png',
-    'assets/images/Picture1.png',
-    'assets/images/Picture2.png',
-    'assets/images/Picture3.png',
-    'assets/images/Picture1.png',
-    'assets/images/Picture2.png',
-    'assets/images/Picture3.png',
-    'assets/images/Picture1.png',
-    'assets/images/Picture2.png',
   ];
 
   @override
   void initState() {
     super.initState();
     recipes = fetchRecipe();
-    print(recipes);
   }
 
   @override
@@ -129,40 +117,97 @@ class _HomePageState extends State<HomePage> {
       body: Column(
         mainAxisSize: MainAxisSize.max,
         children: [
-          CarouselSlider(
-            options: CarouselOptions(
-                height: 200.0,
-                autoPlay: true,
-                autoPlayAnimationDuration: const Duration(milliseconds: 800)),
-            items: imagesCarousel.map((i) {
-              return Builder(
-                builder: (BuildContext context) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => RecipePage()),
+          FutureBuilder<List<Recipe>>(
+              builder: ((context, snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data!.isEmpty) {
+                    return const Center(
+                      child: Text('No Data'),
+                    );
+                  }
+                  return CarouselSlider(
+                    options: CarouselOptions(
+                        height: 200.0,
+                        autoPlay: true,
+                        autoPlayAnimationDuration:
+                            const Duration(milliseconds: 800)),
+                    items: imgList.map((i) {
+                      return Builder(
+                        builder: (BuildContext context) {
+                          return GestureDetector(
+                            onTap: () {
+                              print(recipes);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => RecipePage(
+                                        id: snapshot
+                                            .data![imgList.toList().indexOf(i)]
+                                            .id)),
+                              );
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width,
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 5.0),
+                              decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: AssetImage(i), fit: BoxFit.cover),
+                                  color: Colors.amber),
+                              child: Center(
+                                child: Text(
+                                  '$i',
+                                  style: const TextStyle(fontSize: 16.0),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                       );
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage(i), fit: BoxFit.cover),
-                          color: Colors.amber),
-                      child: Center(
-                        child: Text(
-                          '$i',
-                          style: const TextStyle(fontSize: 16.0),
-                        ),
-                      ),
-                    ),
+                    }).toList(),
                   );
-                },
-              );
-            }).toList(),
-          ),
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              }),
+              future: recipes),
+          // CarouselSlider(
+          //   options: CarouselOptions(
+          //       height: 200.0,
+          //       autoPlay: true,
+          //       autoPlayAnimationDuration: const Duration(milliseconds: 800)),
+          //   items: imagesCarousel.map((i) {
+          //     return Builder(
+          //       builder: (BuildContext context) {
+          //         return GestureDetector(
+          //           onTap: () {
+          //             print(recipes);
+          //             Navigator.push(
+          //               context,
+          //               MaterialPageRoute(builder: (context) => RecipePage()),
+          //             );
+          //           },
+          //           child: Container(
+          //             width: MediaQuery.of(context).size.width,
+          //             margin: const EdgeInsets.symmetric(horizontal: 5.0),
+          //             decoration: BoxDecoration(
+          //                 image: DecorationImage(
+          //                     image: AssetImage(i), fit: BoxFit.cover),
+          //                 color: Colors.amber),
+          //             child: Center(
+          //               child: Text(
+          //                 '$i',
+          //                 style: const TextStyle(fontSize: 16.0),
+          //               ),
+          //             ),
+          //           ),
+          //         );
+          //       },
+          //     );
+          //   }).toList(),
+          // ),
           Padding(
             padding: EdgeInsets.only(top: 15),
             child: Text(
@@ -173,40 +218,95 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          Expanded(
-            child: GridView.count(
-              crossAxisCount: 3,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              padding: const EdgeInsets.all(20),
-              children: imgGrid.map((i) {
-                return Builder(builder: (BuildContext context) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => RecipePage()),
-                      );
-                    },
-                    child: Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: AssetImage(i), fit: BoxFit.cover),
-                          color: Colors.teal),
-                      child: Center(
-                        child: Text(
-                          '$i',
-                          style: const TextStyle(fontSize: 16.0),
-                        ),
-                      ),
-                    ),
+          FutureBuilder<List<Recipe>>(
+              builder: ((context, snapshot) {
+                if (snapshot.hasData) {
+                  if (snapshot.data!.isEmpty) {
+                    return const Center(
+                      child: Text('No Data'),
+                    );
+                  }
+                  return Expanded(
+                    child: GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10),
+                        padding: const EdgeInsets.all(20),
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          return Builder(builder: (BuildContext context) {
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => RecipePage(
+                                          id: snapshot.data![index].id)),
+                                );
+                              },
+                              child: Container(
+                                width: MediaQuery.of(context).size.width,
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 5.0),
+                                decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                        image: AssetImage(
+                                            imgList[index % imgList.length]),
+                                        fit: BoxFit.cover),
+                                    color: Colors.teal),
+                                child: Center(
+                                  child: Text(
+                                    '$index',
+                                    style: const TextStyle(fontSize: 16.0),
+                                  ),
+                                ),
+                              ),
+                            );
+                          });
+                        }),
                   );
-                });
-              }).toList(),
-            ),
-          ),
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              }),
+              future: recipes),
+          // Expanded(
+          //   child: GridView.count(
+          //     crossAxisCount: 3,
+          //     crossAxisSpacing: 10,
+          //     mainAxisSpacing: 10,
+          //     padding: const EdgeInsets.all(20),
+          //     children: imgGrid.map((i) {
+          //       return Builder(builder: (BuildContext context) {
+          //         return GestureDetector(
+          //           onTap: () {
+          //             Navigator.push(
+          //               context,
+          //               MaterialPageRoute(builder: (context) => RecipePage()),
+          //             );
+          //           },
+          //           child: Container(
+          //             width: MediaQuery.of(context).size.width,
+          //             margin: const EdgeInsets.symmetric(horizontal: 5.0),
+          //             decoration: BoxDecoration(
+          //                 image: DecorationImage(
+          //                     image: AssetImage(i), fit: BoxFit.cover),
+          //                 color: Colors.teal),
+          //             child: Center(
+          //               child: Text(
+          //                 '$i',
+          //                 style: const TextStyle(fontSize: 16.0),
+          //               ),
+          //             ),
+          //           ),
+          //         );
+          //       });
+          //     }).toList(),
+          //   ),
+          // ),
         ],
       ),
     );

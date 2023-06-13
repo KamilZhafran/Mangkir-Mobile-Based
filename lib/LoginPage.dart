@@ -17,7 +17,7 @@ class LoginPage extends StatelessWidget {
   Future<void> loginUser(
       String email, String password, BuildContext context) async {
     final Map<String, String> headers = {'Content-Type': 'application/json'};
-    final Uri url = Uri.parse('http://192.168.0.110:8000/api/login');
+    final Uri url = Uri.parse('http://192.168.0.111:8000/api/login');
     final Map<String, String> body = {'email': email, 'password': password};
 
     final response = await http.post(

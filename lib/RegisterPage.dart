@@ -7,31 +7,30 @@ import 'package:tubes_app/LoginPage.dart';
 import 'package:tubes_app/main.dart';
 import 'package:http/http.dart' as http;
 
-Future<void> registerUser(_name, _password, _email, BuildContext context) async {
+Future<void> registerUser(
+    _name, _password, _email, BuildContext context) async {
   final res = await http.post(
-    Uri.parse('http://192.168.0.110:8000/api/register'),
-    body: {
-      'name': _name,
-      'password': _password,
-      'email': _email
-    }
-  );
-  if (res.statusCode == 200){
+      Uri.parse('http://192.168.0.111:8000/api/register'),
+      body: {'name': _name, 'password': _password, 'email': _email});
+  if (res.statusCode == 200) {
     final sharedPreferences = await SharedPreferences.getInstance();
     sharedPreferences.setString('email', _email);
-    Navigator.push(context, MaterialPageRoute(
-      builder: (context) => BottomNav(),
-    ));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => BottomNav(),
+        ));
     final snackBar = SnackBar(
-        content: Text('Registrasi Berhasil'),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }else{
+      content: Text('Registrasi Berhasil'),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  } else {
     print(jsonDecode(res.body));
     final snackBar = SnackBar(
-        content: Text("Pastikan semua data diinput dan pastikan data sudah benar"),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      content:
+          Text("Pastikan semua data diinput dan pastikan data sudah benar"),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
 
@@ -43,7 +42,6 @@ class RegisterState extends StatefulWidget {
 }
 
 class _RegisterState extends State<RegisterState> {
-
   var nameInput = TextEditingController();
   var passwordInput = TextEditingController();
   var emailInput = TextEditingController();
@@ -96,23 +94,22 @@ class _RegisterState extends State<RegisterState> {
                     ),
                     const SizedBox(height: 15), // vertical spacing
                     TextFormField(
-                      // form input for Name
-                      style: const TextStyle(color: Colors.black),
-                      decoration: const InputDecoration(
-                          labelText: 'Name',
-                          hintText: 'Input your Name here...',
-                          labelStyle: TextStyle(color: Colors.black),
-                          enabledBorder: UnderlineInputBorder(
-                              // set the underline border into black
-                              borderSide: BorderSide(color: Colors.black))),
-                      onSaved: (String? value) {
-                        // Nanti buat ambil value yang diinput
-                      },
-                      validator: (String? value) {
-                        // buat validasi input
-                      },
-                      controller: nameInput
-                    ),
+                        // form input for Name
+                        style: const TextStyle(color: Colors.black),
+                        decoration: const InputDecoration(
+                            labelText: 'Name',
+                            hintText: 'Input your Name here...',
+                            labelStyle: TextStyle(color: Colors.black),
+                            enabledBorder: UnderlineInputBorder(
+                                // set the underline border into black
+                                borderSide: BorderSide(color: Colors.black))),
+                        onSaved: (String? value) {
+                          // Nanti buat ambil value yang diinput
+                        },
+                        validator: (String? value) {
+                          // buat validasi input
+                        },
+                        controller: nameInput),
                     const SizedBox(height: 15), // vertical spacing
                     TextFormField(
                       // form input for email
@@ -157,7 +154,8 @@ class _RegisterState extends State<RegisterState> {
                           const EdgeInsets.only(top: 50, right: 50, left: 50),
                       child: ElevatedButton(
                         onPressed: () async {
-                          registerUser(nameInput.text, passwordInput.text, emailInput.text, context);
+                          registerUser(nameInput.text, passwordInput.text,
+                              emailInput.text, context);
                         },
                         // button untuk login
                         style: ElevatedButton.styleFrom(

@@ -8,7 +8,8 @@ void main() {
 }
 
 class RecipePage extends StatefulWidget {
-  const RecipePage({Key? key}) : super(key: key);
+  final int id;
+  const RecipePage({Key? key, this.id = -1}) : super(key: key);
 
   @override
   State<RecipePage> createState() => _RecipePageState();
@@ -38,7 +39,7 @@ class _RecipePageState extends State<RecipePage> {
                 flexibleSpace: FlexibleSpaceBar(
                   centerTitle: true,
                   title: Text(
-                    "Recipe Name",
+                    "Recipe Name ${widget.id}",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,

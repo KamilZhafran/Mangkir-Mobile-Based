@@ -19,23 +19,26 @@ var recipeData = Map<String, dynamic>();
 TextEditingController titleController = TextEditingController();
 TextEditingController timeController = TextEditingController();
 
-Future<void> uploadRecipe(Map<String, dynamic> data, BuildContext context) async {
+Future<void> uploadRecipe(
+    Map<String, dynamic> data, BuildContext context) async {
   print(jsonEncode(data));
   final Map<String, String> headers = {'Content-Type': 'application/json'};
   final res = await http.post(
-    Uri.parse('http://192.168.0.110:8000/api/recipe'),
+    Uri.parse('http://192.168.0.111:8000/api/recipe'),
     headers: headers,
     body: jsonEncode(data),
   );
   if (res.statusCode == 200) {
-    Navigator.push(context, MaterialPageRoute(
-      builder: (context) => const Home(),
-    ));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const Home(),
+        ));
   } else {
     final snackBar = SnackBar(
-        content: Text('Mohon lengkapi data masakan'),
-      );
-      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      content: Text('Mohon lengkapi data masakan'),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
 
@@ -346,7 +349,8 @@ class _UploadState extends State<Upload> {
                     //     );
                     //   }),
                     // );
-                    final sharedPreferences = await SharedPreferences.getInstance();
+                    final sharedPreferences =
+                        await SharedPreferences.getInstance();
                     recipeData['email'] = sharedPreferences.getString('email');
                     recipeData['judul'] = titleController.text;
                     recipeData['backstory'] = 'dulu nemu di kolong jembatan';
