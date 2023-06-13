@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubes_app/LoginPage.dart';
+import 'package:tubes_app/ProfilePage.dart';
 import 'package:tubes_app/RecipePage.dart';
 import 'package:tubes_app/FilterPage.dart';
 import 'model/Recipe.dart';
@@ -47,12 +48,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late Future<List<Recipe>> recipes;
-
-  Future<void> logout() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    await prefs.remove('email');
-  }
 
   List imagesCarousel = [
     'assets/images/Picture1.png',
@@ -125,56 +120,6 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                   ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.all(10),
-              child: GestureDetector(
-                onTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => LoginPage()),
-                  // );
-                  AlertDialog alert = AlertDialog(
-                    title: Text('Are you sure?'),
-                    content: SingleChildScrollView(
-                      child: ListBody(
-                        children: const <Widget>[
-                          Text('You will be logged out'),
-                        ],
-                      ),
-                    ),
-                    actions: <Widget>[
-                      TextButton(
-                        child: const Text('Cancel'),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                      ),
-                      TextButton(
-                        child: const Text('Logout'),
-                        onPressed: () {
-                          logout();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => LoginPage()),
-                          );
-                        },
-                      ),
-                    ],
-                  );
-
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return alert;
-                    },
-                  );
-                },
-                child: CircleAvatar(
-                  child: Icon(Icons.person),
                 ),
               ),
             ),

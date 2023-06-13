@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubes_app/HomePage.dart';
 import 'package:tubes_app/LoginPage.dart';
+import 'package:tubes_app/ProfilePage.dart';
 import 'package:tubes_app/UploadPage.dart';
 
 import 'HomePage.dart';
@@ -71,9 +72,7 @@ class _BottomNav extends State<BottomNav> {
           children: [
             HomePage(),
             Upload(),
-            Container(
-              child: Text('Favorite'),
-            ),
+            ProfilePage()
           ],
         ),
       ),
@@ -108,10 +107,10 @@ class _BottomNav extends State<BottomNav> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.favorite,
+              Icons.person,
               color: Colors.white,
             ),
-            label: 'Favorite',
+            label: 'Profile',
           ),
         ],
       ),
