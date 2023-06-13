@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubes_app/HomePage.dart';
+import 'package:tubes_app/constants/API.dart';
 
 void main() {
   runApp(const Upload());
@@ -24,7 +25,7 @@ Future<void> uploadRecipe(
   print(jsonEncode(data));
   final Map<String, String> headers = {'Content-Type': 'application/json'};
   final res = await http.post(
-    Uri.parse('http://192.168.0.105:8000/api/recipe'),
+    Uri.parse('${API.BASE_URL}/recipe'),
     headers: headers,
     body: jsonEncode(data),
   );

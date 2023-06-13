@@ -5,13 +5,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubes_app/LoginPage.dart';
 import 'package:tubes_app/model/Recipe.dart';
 import 'package:http/http.dart' as http;
+import 'package:tubes_app/constants/API.dart';
 
 Future<List<Recipe>> fetchMyRecipe() async {
   final prefs = await SharedPreferences.getInstance();
   final email = prefs.getString('email');
   print(email);
   final Map<String, String> headers = {'Content-Type': 'application/json'};
-  final uri = Uri.parse('http://192.168.0.105:8000/api/recipes')
+  final uri = Uri.parse('${API.BASE_URL}/recipes')
       .replace(queryParameters: {'email': email});
   final res = await http.get(uri, headers: headers);
   if (res.statusCode == 200) {

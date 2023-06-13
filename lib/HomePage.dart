@@ -10,14 +10,14 @@ import 'package:tubes_app/RecipePage.dart';
 import 'package:tubes_app/FilterPage.dart';
 import 'model/Recipe.dart';
 import 'package:http/http.dart' as http;
+import 'package:tubes_app/constants/API.dart';
 
 void main() {
   runApp(const Home());
 }
 
 Future<List<Recipe>> fetchRecipe() async {
-  final res =
-      await http.get(Uri.parse('http://192.168.0.105:8000/api/recipes'));
+  final res = await http.get(Uri.parse('${API.BASE_URL}/recipes'));
   if (res.statusCode == 200) {
     var data = jsonDecode(res.body);
     var parsed = data.cast<Map<String, dynamic>>();

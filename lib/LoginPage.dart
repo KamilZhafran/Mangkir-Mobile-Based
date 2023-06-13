@@ -7,6 +7,7 @@ import 'package:tubes_app/RegisterPage.dart';
 import 'package:tubes_app/main.dart';
 import 'package:http/http.dart' as http; // error nya dari sini
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tubes_app/constants/API.dart';
 
 TextEditingController emailController = TextEditingController();
 TextEditingController passwordController = TextEditingController();
@@ -17,7 +18,7 @@ class LoginPage extends StatelessWidget {
   Future<void> loginUser(
       String email, String password, BuildContext context) async {
     final Map<String, String> headers = {'Content-Type': 'application/json'};
-    final Uri url = Uri.parse('http://192.168.0.105:8000/api/login');
+    final Uri url = Uri.parse('${API.BASE_URL}/login');
     final Map<String, String> body = {'email': email, 'password': password};
 
     final response = await http.post(

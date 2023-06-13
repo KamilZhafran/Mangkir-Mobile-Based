@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'model/Recipe.dart';
 import 'package:http/http.dart' as http;
 import 'FilterPage.dart';
+import 'package:tubes_app/constants/API.dart';
 
 Future<List<Recipe>> searchRecipe(
     String keyword, String kategori, String durasi) async {
   final Map<String, String> headers = {'Content-Type': 'application/json'};
-  final uri = Uri.parse('http://192.168.0.105:8000/api/search')
-      .replace(queryParameters: {
+  final uri = Uri.parse('${API.BASE_URL}/search').replace(queryParameters: {
     'keyword': keyword,
     'durasi': durasi,
     'category': kategori,

@@ -6,11 +6,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubes_app/LoginPage.dart';
 import 'package:tubes_app/main.dart';
 import 'package:http/http.dart' as http;
+import 'package:tubes_app/constants/API.dart';
 
 Future<void> registerUser(
     _name, _password, _email, BuildContext context) async {
-  final res = await http.post(
-      Uri.parse('http://192.168.0.105:8000/api/register'),
+  final res = await http.post(Uri.parse('${API.BASE_URL}/register'),
       body: {'name': _name, 'password': _password, 'email': _email});
   if (res.statusCode == 200) {
     final sharedPreferences = await SharedPreferences.getInstance();

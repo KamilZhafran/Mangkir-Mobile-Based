@@ -5,6 +5,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import './model/RecipedDetail.dart';
+import 'package:tubes_app/constants/API.dart';
 
 void main() {
   runApp(const RecipePage());
@@ -18,14 +19,16 @@ class RecipePage extends StatefulWidget {
   State<RecipePage> createState() => _RecipePageState();
 }
 
-Future<List<RecipeDetail>> fetchRecipe() async{
+Future<List<RecipeDetail>> fetchRecipe() async {
   RecipePage rp = RecipePage();
 
-  final res = await http.get(Uri.parse('http://192.168.0.105:8000/api/recipe/${rp.id}'));
+  final res = await http.get(Uri.parse('${API.BASE_URL}/recipe/${rp.id}'));
   if (res.statusCode == 200) {
     var data = jsonDecode(res.body);
     var parsed = data.cast<Map<String, dynamic>>();
-    return parsed.map<RecipeDetail>((json) => RecipeDetail.fromJson(json)).toList();
+    return parsed
+        .map<RecipeDetail>((json) => RecipeDetail.fromJson(json))
+        .toList();
   } else {
     throw Exception('Failed');
   }
@@ -34,8 +37,7 @@ Future<List<RecipeDetail>> fetchRecipe() async{
 class _RecipePageState extends State<RecipePage> {
   late Future<List<RecipeDetail>> recipes;
   @override
-
-  void initState(){
+  void initState() {
     super.initState();
     recipes = fetchRecipe();
     print(recipes);
@@ -178,43 +180,38 @@ class Instruction extends StatelessWidget {
       direction: Axis.vertical,
       children: [
         Expanded(
-          child: FutureBuilder<List<RecipeDetail>>(
-            future: _RecipePageState().recipes,
-            builder: ((context, snapshot) {
-              if(snapshot.hasData){
-                if(snapshot.data!.isEmpty){
-                  return const Center(
-                    child: Text('Tidak ada data')
-                  );
-                }
-                return ListView.builder(
-            padding: EdgeInsets.symmetric(horizontal: 30),
-            itemCount: 15,
-            itemBuilder: (BuildContext context, int index) {
-              print(snapshot.data![index].dataSteps[index]);
-              return Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Padding(
-                    padding: EdgeInsets.all(20),
-                    child: Text(
-                      "${index}. List instruction $index",
-                      style: TextStyle(color: Colors.black, fontSize: 15),
-                    )),
-              );
-            },
-          );
-              }else{
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+            child: FutureBuilder<List<RecipeDetail>>(
+          future: _RecipePageState().recipes,
+          builder: ((context, snapshot) {
+            if (snapshot.hasData) {
+              if (snapshot.data!.isEmpty) {
+                return const Center(child: Text('Tidak ada data'));
               }
-            }),
-          )
-        
-          
-        ),
+              return ListView.builder(
+                padding: EdgeInsets.symmetric(horizontal: 30),
+                itemCount: 15,
+                itemBuilder: (BuildContext context, int index) {
+                  print(snapshot.data![index].dataSteps[index]);
+                  return Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: Padding(
+                        padding: EdgeInsets.all(20),
+                        child: Text(
+                          "${index}. List instruction $index",
+                          style: TextStyle(color: Colors.black, fontSize: 15),
+                        )),
+                  );
+                },
+              );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }),
+        )),
       ],
     );
   }
