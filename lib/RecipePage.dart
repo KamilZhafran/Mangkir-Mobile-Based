@@ -46,7 +46,7 @@ class RecipePage extends StatefulWidget {
     final res = await http
         .delete(Uri.parse('${API.BASE_URL}/recipes/favorite/${this.id}'));
     if (res.statusCode == 200) {
-      print('berhasil');
+      print('berhasil menghapus');
     } else {
       throw Exception('Failed');
     }
@@ -82,7 +82,7 @@ Future<void> postComment(
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => RecipePage(id:_recipeID),
+          builder: (context) => RecipePage(id: _recipeID),
         ));
     final snackBar = SnackBar(
       content: Text('Comment Berhasil'),
@@ -109,21 +109,28 @@ class _RecipePageState extends State<RecipePage> {
   bool isFavorite = false;
 
   Future<RecipeDetail> fetchRecipe() async {
-    final res = await http.get(Uri.parse('${API.BASE_URL}/recipe/${widget.id}'));
+    final res =
+        await http.get(Uri.parse('${API.BASE_URL}/recipe/${widget.id}'));
     if (res.statusCode == 200) {
       var data = jsonDecode(res.body);
       var parsedRecipe = data['data_recipe'];
       var parsedIngreds = data['data_ingredients'];
       var parsedTools = data['data_tools'];
       var parsedSteps = data['data_steps'];
-      
+
       RecipeDetail recipeDetail = RecipeDetail(
-        author: data['author']['name'],
-        dataRecipe: parsedRecipe['judul'],
-        dataIngredients: parsedIngreds.map<Ingredient>((ingredientJson) => Ingredient.fromJson(ingredientJson)).toList(),
-        dataTools: parsedTools.map<Tool>((toolJson) => Tool.fromJson(toolJson)).toList(),
-        dataSteps: parsedSteps.map<Steps>((stepJson) => Steps.fromJson(stepJson)).toList()
-      );
+          author: data['author']['name'],
+          dataRecipe: parsedRecipe['judul'],
+          dataIngredients: parsedIngreds
+              .map<Ingredient>(
+                  (ingredientJson) => Ingredient.fromJson(ingredientJson))
+              .toList(),
+          dataTools: parsedTools
+              .map<Tool>((toolJson) => Tool.fromJson(toolJson))
+              .toList(),
+          dataSteps: parsedSteps
+              .map<Steps>((stepJson) => Steps.fromJson(stepJson))
+              .toList());
       print(recipeDetail);
       return recipeDetail;
     } else {
@@ -171,9 +178,11 @@ class _RecipePageState extends State<RecipePage> {
         child: NestedScrollView(
           body: TabBarView(
             children: [
-              Ingredients(ingreds : dataIngredients,),
+              Ingredients(
+                ingreds: dataIngredients,
+              ),
               Instruction(steps: dataSteps),
-              Comments(id:widget.id),
+              Comments(id: widget.id),
             ],
           ),
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -195,30 +204,30 @@ class _RecipePageState extends State<RecipePage> {
                           fontSize: 16,
                         ),
                       ),
-                      IconButton(
-                        icon: isFavorite
-                            ? Icon(
-                                Icons.favorite_border,
-                                color: Colors.white,
-                              )
-                            : Icon(
-                                Icons.favorite,
-                                color: Colors.white,
-                              ),
-                        onPressed: isFavorite
-                            ? () {
-                                widget.deleteFavorite();
-                                setState(() {
-                                  isFavorite = false;
-                                });
-                              }
-                            : () async {
-                                await widget.addFavorite();
-                                setState(() {
-                                  isFavorite = true;
-                                });
-                              },
-                      ),
+                      // IconButton(
+                      //   icon: isFavorite
+                      //       ? Icon(
+                      //           Icons.favorite_border,
+                      //           color: Colors.white,
+                      //         )
+                      //       : Icon(
+                      //           Icons.favorite,
+                      //           color: Colors.white,
+                      //         ),
+                      //   onPressed: isFavorite
+                      //       ? () {
+                      //           widget.deleteFavorite();
+                      //           setState(() {
+                      //             isFavorite = false;
+                      //           });
+                      //         }
+                      //       : () async {
+                      //           await widget.addFavorite();
+                      //           setState(() {
+                      //             isFavorite = true;
+                      //           });
+                      //         },
+                      // ),
                       () {
                         for (var map in favRecipes) {
                           if (map.id == widget.id) {
@@ -359,7 +368,7 @@ class Ingredients extends StatelessWidget {
 class Instruction extends StatelessWidget {
   final List<Steps> steps;
   const Instruction({Key? key, required this.steps}) : super(key: key);
-  
+
   @override
   Widget build(BuildContext context) {
     return Flex(
@@ -378,10 +387,12 @@ class Instruction extends StatelessWidget {
                 ),
                 child: ListTile(
                   leading: CircleAvatar(
-                    backgroundColor: Colors.amber, 
-                    child: Text(step.urutan.toString(), style: 
-                      TextStyle(color: Colors.black),),
+                    backgroundColor: Colors.amber,
+                    child: Text(
+                      step.urutan.toString(),
+                      style: TextStyle(color: Colors.black),
                     ),
+                  ),
                   title: Text(step.deskripsi),
                 ),
               );
@@ -391,7 +402,6 @@ class Instruction extends StatelessWidget {
       ],
     );
   }
-
 }
 
 class Comments extends StatelessWidget {
@@ -461,9 +471,9 @@ class Comments extends StatelessWidget {
                 rating = r;
               },
             ),
-           // _email, _rating, _recipeID, _deskripsi, BuildContext context
+            // _email, _rating, _recipeID, _deskripsi, BuildContext context
             MaterialButton(
-              onPressed: () async{
+              onPressed: () async {
                 final prefs = await SharedPreferences.getInstance();
                 final email = prefs.getString("email");
                 postComment(email, rating, this.id, deskripsi.text, context);
