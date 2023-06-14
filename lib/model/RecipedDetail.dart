@@ -1,9 +1,13 @@
+import 'Step.dart';
+import 'Tool.dart';
+import 'Ingredient.dart';
+
 class RecipeDetail{
   final String author;
   final String dataRecipe;
-  final String dataIngredients;
-  final String dataTools;
-  final String dataSteps;
+  final List<Ingredient> dataIngredients;
+  final List<Tool> dataTools;
+  final List<Steps> dataSteps;
 
   const RecipeDetail({
     required this.author,

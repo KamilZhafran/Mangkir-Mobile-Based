@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubes_app/LoginPage.dart';
+import 'package:tubes_app/RecipePage.dart';
 import 'package:tubes_app/model/Recipe.dart';
 import 'package:http/http.dart' as http;
 import 'constants/API.dart';
@@ -163,7 +164,11 @@ class _ProfilePageState extends State<ProfilePage> {
                         final recipe = recipeList[index];
                         return GestureDetector(
                           onTap: () {
-                            print(recipe);
+                            Navigator.push(context, MaterialPageRoute(
+                              builder: (context) => RecipePage(
+                                id: recipe.id,
+                              ),
+                            ));
                           },
                           child: Container(
                             decoration: BoxDecoration(

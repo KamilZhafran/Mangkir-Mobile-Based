@@ -4,18 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tubes_app/model/Ingredient.dart';
+import 'package:tubes_app/model/Tool.dart';
 import 'dart:convert';
 import './model/RecipedDetail.dart';
 import 'constants/API.dart';
 import 'model/Recipe.dart';
+import 'model/Step.dart';
 
-void main() {
-  runApp(const RecipePage());
-}
+// void main() {
+//   runApp(const RecipePage());
+// }
 
 class RecipePage extends StatefulWidget {
   final int id;
-  const RecipePage({Key? key, this.id = -1}) : super(key: key);
+  const RecipePage({Key? key, required this.id}) : super(key: key);
 
   Future<Map<String, dynamic>> addFavorite() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -47,19 +50,6 @@ class RecipePage extends StatefulWidget {
     }
   }
 
-  Future<List<RecipeDetail>> fetchRecipe() async {
-    final res = await http.get(Uri.parse('${API.BASE_URL}/recipe/${this.id}'));
-    if (res.statusCode == 200) {
-      var data = jsonDecode(res.body);
-      var parsed = data.cast<Map<String, dynamic>>();
-      return parsed
-          .map<RecipeDetail>((json) => RecipeDetail.fromJson(json))
-          .toList();
-    } else {
-      throw Exception('Failed fetching recipe detail');
-    }
-  }
-
   @override
   State<RecipePage> createState() => _RecipePageState();
 }
@@ -82,10 +72,37 @@ Future<List<Recipe>> fetchMyRecipe() async {
 }
 
 class _RecipePageState extends State<RecipePage> {
-  late Future<List<RecipeDetail>> recipes;
+  late Future<RecipeDetail> recipes;
   late Future<List<Recipe>> futureRecipes;
+  List<Ingredient> dataIngredients = [];
+  List<Tool> dataTools = [];
+  List<Steps> dataSteps = [];
   List<Recipe> favRecipes = [];
+  String judul = '';
   bool isFavorite = false;
+
+  Future<RecipeDetail> fetchRecipe() async {
+    final res = await http.get(Uri.parse('${API.BASE_URL}/recipe/${widget.id}'));
+    if (res.statusCode == 200) {
+      var data = jsonDecode(res.body);
+      var parsedRecipe = data['data_recipe'];
+      var parsedIngreds = data['data_ingredients'];
+      var parsedTools = data['data_tools'];
+      var parsedSteps = data['data_steps'];
+      
+      RecipeDetail recipeDetail = RecipeDetail(
+        author: data['author']['name'],
+        dataRecipe: parsedRecipe['judul'],
+        dataIngredients: parsedIngreds.map<Ingredient>((ingredientJson) => Ingredient.fromJson(ingredientJson)).toList(),
+        dataTools: parsedTools.map<Tool>((toolJson) => Tool.fromJson(toolJson)).toList(),
+        dataSteps: parsedSteps.map<Steps>((stepJson) => Steps.fromJson(stepJson)).toList()
+      );
+      print(recipeDetail);
+      return recipeDetail;
+    } else {
+      throw Exception('Failed fetching recipe detail');
+    }
+  }
 
   void checkFavorite() {
     for (var map in favRecipes) {
@@ -101,12 +118,22 @@ class _RecipePageState extends State<RecipePage> {
   @override
   void initState() {
     super.initState();
-    recipes = RecipePage().fetchRecipe();
+    recipes = fetchRecipe();
     futureRecipes = fetchMyRecipe();
     futureRecipes.then((value) {
       favRecipes = value;
     });
     checkFavorite();
+
+    recipes.then((recipeDetail) {
+      setState(() {
+        dataIngredients = recipeDetail.dataIngredients;
+        dataTools = recipeDetail.dataTools;
+        dataSteps = recipeDetail.dataSteps;
+        judul = recipeDetail.dataRecipe;
+        print(recipeDetail.dataRecipe);
+      });
+    });
   }
 
   @override
@@ -117,8 +144,8 @@ class _RecipePageState extends State<RecipePage> {
         child: NestedScrollView(
           body: TabBarView(
             children: [
-              Ingredients(),
-              Instruction(),
+              Ingredients(ingreds : dataIngredients,),
+              Instruction(steps: dataSteps),
               Comments(),
             ],
           ),
@@ -135,7 +162,7 @@ class _RecipePageState extends State<RecipePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Text(
-                        "Recipe Name ${widget.id}",
+                        "${judul}",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -265,29 +292,33 @@ class _SliverAppBarDeligate extends SliverPersistentHeaderDelegate {
 }
 
 class Ingredients extends StatelessWidget {
-  const Ingredients({Key? key}) : super(key: key);
+  final List<Ingredient> ingreds;
+
+  const Ingredients({Key? key, required this.ingreds}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
-    // kerjain di sini
     return Flex(
       direction: Axis.vertical,
       children: [
         Expanded(
           child: ListView.builder(
             padding: EdgeInsets.symmetric(horizontal: 30),
-            itemCount: 15,
+            itemCount: ingreds.length,
             itemBuilder: (BuildContext context, int index) {
+              Ingredient ingredient = ingreds[index];
+
               return Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(50),
                 ),
                 child: ListTile(
                   leading: const Icon(Icons.list),
-                  trailing: const Text(
-                    "GFG",
+                  trailing: Text(
+                    '${ingredient.quantity} ${ingredient.unit}',
                     style: TextStyle(color: Colors.green, fontSize: 15),
                   ),
-                  title: Text("List item $index"),
+                  title: Text(ingredient.ingredientName),
                 ),
               );
             },
@@ -299,48 +330,41 @@ class Ingredients extends StatelessWidget {
 }
 
 class Instruction extends StatelessWidget {
-  const Instruction({Key? key}) : super(key: key);
+  final List<Steps> steps;
+  const Instruction({Key? key, required this.steps}) : super(key: key);
+  
   @override
   Widget build(BuildContext context) {
     return Flex(
       direction: Axis.vertical,
       children: [
         Expanded(
-            child: FutureBuilder<List<RecipeDetail>>(
-          future: _RecipePageState().recipes,
-          builder: ((context, snapshot) {
-            if (snapshot.hasData) {
-              if (snapshot.data!.isEmpty) {
-                return const Center(child: Text('Tidak ada data'));
-              }
-              return ListView.builder(
-                padding: EdgeInsets.symmetric(horizontal: 30),
-                itemCount: 15,
-                itemBuilder: (BuildContext context, int index) {
-                  print(snapshot.data![index].dataSteps[index]);
-                  return Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(50),
+          child: ListView.builder(
+            padding: EdgeInsets.symmetric(horizontal: 30),
+            itemCount: steps.length,
+            itemBuilder: (BuildContext context, int index) {
+              Steps step = steps[index];
+
+              return Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.amber, 
+                    child: Text(step.urutan.toString(), style: 
+                      TextStyle(color: Colors.black),),
                     ),
-                    child: Padding(
-                        padding: EdgeInsets.all(20),
-                        child: Text(
-                          "${index}. List instruction $index",
-                          style: TextStyle(color: Colors.black, fontSize: 15),
-                        )),
-                  );
-                },
+                  title: Text(step.deskripsi),
+                ),
               );
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          }),
-        )),
+            },
+          ),
+        ),
       ],
     );
   }
+
 }
 
 class Comments extends StatelessWidget {
