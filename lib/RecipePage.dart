@@ -9,8 +9,10 @@ import 'package:tubes_app/model/Tool.dart';
 import 'dart:convert';
 import './model/RecipedDetail.dart';
 import 'constants/API.dart';
+import 'main.dart';
 import 'model/Recipe.dart';
 import 'model/Step.dart';
+import 'model/Comment.dart';
 
 // void main() {
 //   runApp(const RecipePage());
@@ -68,6 +70,31 @@ Future<List<Recipe>> fetchMyRecipe() async {
     return parsed.map<Recipe>((json) => Recipe.fromJson(json)).toList();
   } else {
     throw Exception('Failed fetching favorite');
+  }
+}
+
+Future<void> postComment(
+    _email, _rating, _recipeID, _deskripsi, BuildContext context) async {
+  final res = await http.put(Uri.parse('${API.BASE_URL}/recipe/${_recipeID}'),
+      body: {'email': _email, 'rating': _rating, 'deskripsi': _deskripsi});
+  if (res.statusCode == 200) {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => RecipePage(id:_recipeID),
+        ));
+    final snackBar = SnackBar(
+      content: Text('Comment Berhasil'),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  } else {
+    print(jsonDecode(res.body));
+    final snackBar = SnackBar(
+      content:
+          Text("Pastikan semua data diinput dan pastikan data sudah benar"),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
 
@@ -146,7 +173,7 @@ class _RecipePageState extends State<RecipePage> {
             children: [
               Ingredients(ingreds : dataIngredients,),
               Instruction(steps: dataSteps),
-              Comments(),
+              Comments(id:widget.id),
             ],
           ),
           headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
@@ -368,7 +395,11 @@ class Instruction extends StatelessWidget {
 }
 
 class Comments extends StatelessWidget {
-  const Comments({Key? key}) : super(key: key);
+  var deskripsi = TextEditingController();
+  var rating = 0.0;
+  final int id;
+
+  Comments({Key? key, required this.id}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     // kerjain di sini
@@ -426,12 +457,17 @@ class Comments extends StatelessWidget {
                   color: Colors.orange,
                 ),
               ),
-              onRatingUpdate: (rating) {
-                print(rating);
+              onRatingUpdate: (r) {
+                rating = r;
               },
             ),
+           // _email, _rating, _recipeID, _deskripsi, BuildContext context
             MaterialButton(
-              onPressed: () {},
+              onPressed: () async{
+                final prefs = await SharedPreferences.getInstance();
+                final email = prefs.getString("email");
+                postComment(email, rating, this.id, deskripsi.text, context);
+              },
               child: Text(
                 "Submit",
                 style: TextStyle(
